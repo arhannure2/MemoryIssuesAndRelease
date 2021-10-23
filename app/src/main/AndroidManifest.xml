@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.memoryissues">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_ram_memory"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_ram_memory"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MemoryIssues">
+
+
+        <activity android:name=".SplashScreenActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".MainActivity" />
+
+        <activity android:name=".AnonymousClassReferenceLeak.AnonymousClassReferenceLeakActivity" />
+        <activity android:name=".BroadcastReceiverLeak.BroadcastReceiverLeakActivity" />
+        <activity android:name=".HandlersReferenceLeak.HandlersReferenceLeakActivity" />
+        <activity android:name=".HandlersReferenceLeak.HandlersReferenceLeakActivitySolved" />
+        <activity android:name=".InnerClassReferenceLeak.InnerClassReferenceLeakActivity" />
+        <activity android:name=".InnerClassReferenceLeak.InnerClassReferenceLeakActivitySolved" />
+        <activity android:name=".InnerClassReferenceLeak.SecondActivity" />
+        <activity android:name=".SingletonLeak.SingletonLeakExampleActivity" />
+        <activity android:name=".StaticReferenceLeak.StaticReferenceLeakActivity" />
+        <activity android:name=".ThreadReferenceLeak.ThreadReferenceLeakActivity" />
+        <activity android:name=".ThreadReferenceLeak.ThreadReferenceLeakActivitySolved" />
+        <activity android:name=".TimerTaskReferenceLeak.TimerTaskReferenceLeakActivity" />
+        <activity android:name=".TimerTaskReferenceLeak.TimerTaskReferenceLeakActivitySolved" />
+
+
+
+
+
+
+    </application>
+
+</manifest>

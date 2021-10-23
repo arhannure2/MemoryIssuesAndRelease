@@ -1,0 +1,3 @@
+rootProject.name = "Memory Issues"
+include ':app'
+startParameter.offline=false

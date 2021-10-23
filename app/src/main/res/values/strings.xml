@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Memory Issues and Release </string>
+
+    <string name="text_inner_class_1">text inner class 1</string>
+    <string name="activity_dialog_btn">OKAY</string>
+    <string name="text_handler_1">text handler 1</string>
+    <string name="text_handler_2">text handler 2</string>
+    <string name="msg">Please check my code and README.md file on github repository. </string>
+    <string name="msg_one">Dont forget to read code comment , memory leak and solution has been provided. </string>
+
+
+
+
+
+</resources>
