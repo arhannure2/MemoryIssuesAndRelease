@@ -1,55 +1,43 @@
-package com.example.memoryissues.ThreadReferenceLeak;
+package com.example.memoryissues.ThreadReferenceLeak
 
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.example.memoryissues.R
+import android.content.Intent
+import com.example.memoryissues.InnerClassReferenceLeak.SecondActivity
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.memoryissues.InnerClassReferenceLeak.SecondActivity;
-import com.example.memoryissues.R;
-
-public class ThreadReferenceLeakActivitySolved extends AppCompatActivity {
-
+class ThreadReferenceLeakActivitySolved : AppCompatActivity() {
     /*
      * FIX I: make variable non static
      * */
-    private LeakyThread leakyThread = new LeakyThread();
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
-
-        createThread();
-        redirectToNewScreen();
+    private val leakyThread = LeakyThread()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_first)
+        createThread()
+        redirectToNewScreen()
     }
 
-
-    private void createThread() {
-        leakyThread.start();
+    private fun createThread() {
+        leakyThread.start()
     }
 
-    private void redirectToNewScreen() {
-        startActivity(new Intent(this, SecondActivity.class));
+    private fun redirectToNewScreen() {
+        startActivity(Intent(this, SecondActivity::class.java))
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    override fun onDestroy() {
+        super.onDestroy()
         // FIX II: kill the thread
-        leakyThread.interrupt();
+        leakyThread.interrupt()
     }
-
 
     /*
      * Fix III: Make thread static
      * */
-    private static class LeakyThread extends Thread {
-        @Override
-        public void run() {
-            while (!isInterrupted()) {
+    private class LeakyThread : Thread() {
+        override fun run() {
+            while (!isInterrupted) {
             }
         }
     }

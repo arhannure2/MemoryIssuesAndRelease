@@ -1,40 +1,30 @@
-package com.example.memoryissues.InnerClassReferenceLeak;
+package com.example.memoryissues.InnerClassReferenceLeak
 
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import com.example.memoryissues.R
+import android.app.Activity
+import android.content.Intent
+import com.example.memoryissues.InnerClassReferenceLeak.SecondActivity
+import java.lang.ref.WeakReference
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.memoryissues.R;
-
-import java.lang.ref.WeakReference;
-
-public class InnerClassReferenceLeakActivitySolved extends AppCompatActivity {
-
+class InnerClassReferenceLeakActivitySolved : AppCompatActivity() {
     /*
      * Mistake Number 1:
      * Never create a static variable of an inner class
      * Fix I:
      */
-    private LeakyClass leakyClass;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
-
-        new LeakyClass(this).redirectToSecondScreen();
+    private var leakyClass: LeakyClass? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_first)
+        LeakyClass(this).redirectToSecondScreen()
 
         /*
          * Inner class is defined here
-         * */
-        leakyClass = new LeakyClass(this);
-        leakyClass.redirectToSecondScreen();
+         * */leakyClass = LeakyClass(this)
+        leakyClass!!.redirectToSecondScreen()
     }
-
 
     /*
      * How to fix the above class:
@@ -47,19 +37,16 @@ public class InnerClassReferenceLeakActivitySolved extends AppCompatActivity {
      * Explanation: Weak References: Garbage collector can collect an object if only weak references
      * are pointing towards it.
      * */
-    private static class LeakyClass {
-
-        private WeakReference<Activity> messageViewReference;
-        public LeakyClass(Activity activity) {
-            //this.activity = new WeakReference<>(activity);
-            this.messageViewReference = new WeakReference<>(activity);
+    private class LeakyClass(activity: Activity) {
+        private val messageViewReference: WeakReference<Activity>
+        fun redirectToSecondScreen() {
+            val activity = messageViewReference.get()
+            activity?.startActivity(Intent(activity, SecondActivity::class.java))
         }
 
-        public void redirectToSecondScreen() {
-            Activity activity = messageViewReference.get();
-            if(activity != null) {
-                activity.startActivity(new Intent(activity, SecondActivity.class));
-            }
+        init {
+            //this.activity = new WeakReference<>(activity);
+            messageViewReference = WeakReference(activity)
         }
     }
 }

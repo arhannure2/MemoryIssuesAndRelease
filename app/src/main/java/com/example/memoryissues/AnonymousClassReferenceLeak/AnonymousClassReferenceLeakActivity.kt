@@ -1,61 +1,47 @@
-package com.example.memoryissues.AnonymousClassReferenceLeak;
+package com.example.memoryissues.AnonymousClassReferenceLeak
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.memoryissues.R;
-
-import java.lang.ref.WeakReference;
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
+import android.os.Bundle
+import android.view.View
+import com.example.memoryissues.R
+import com.example.memoryissues.AnonymousClassReferenceLeak.AnonymousClassReferenceLeakActivity.LeakyRunnable
+import java.lang.ref.WeakReference
 
 /*
 *
 * This follows the same theory as before. Sample implementation for fixing memory leak is given below:
 * */
-
-public class AnonymousClassReferenceLeakActivity extends AppCompatActivity {
-
-    private TextView textView;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_anonymous_class_reference_leak);
-
-
-        textView = findViewById(R.id.activity_text);
-        textView.setText(getString(R.string.text_inner_class_1));
-        findViewById(R.id.activity_dialog_btn).setVisibility(View.INVISIBLE);
+class AnonymousClassReferenceLeakActivity : AppCompatActivity() {
+    private var textView: TextView? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_anonymous_class_reference_leak)
+        textView = findViewById(R.id.activity_text)
+        textView!!.setText(getString(R.string.text_inner_class_1))
+        findViewById<View>(R.id.activity_dialog_btn).visibility = View.INVISIBLE
 
         /*
          * Runnable class is defined here
-         * */
-        new Thread(new LeakyRunnable(textView)).start();
+         * */Thread(LeakyRunnable(textView)).start()
     }
 
-
-
-    private static class LeakyRunnable implements Runnable {
-
-        private final WeakReference<TextView> messageViewReference;
-        private LeakyRunnable(TextView textView) {
-            this.messageViewReference = new WeakReference<>(textView);
+    private class LeakyRunnable(textView: TextView?) : Runnable {
+        private val messageViewReference: WeakReference<TextView?>
+        override fun run() {
+            try {
+                Thread.sleep(5000)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+            val textView = messageViewReference.get()
+            if (textView != null) {
+                textView.text = "Runnable class has completed its work"
+            }
         }
 
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            TextView textView = messageViewReference.get();
-            if(textView != null) {
-                textView.setText("Runnable class has completed its work");
-            }
+        init {
+            messageViewReference = WeakReference(textView)
         }
     }
 }

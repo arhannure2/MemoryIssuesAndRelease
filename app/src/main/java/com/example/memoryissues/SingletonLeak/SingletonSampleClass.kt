@@ -1,24 +1,27 @@
-package com.example.memoryissues.SingletonLeak;
+package com.example.memoryissues.SingletonLeak
 
-import android.content.Context;
+import android.content.Context
+import com.example.memoryissues.SingletonLeak.SingletonSampleClass
+import kotlin.jvm.Synchronized
 
-public class SingletonSampleClass {
-
-    private Context context;
-    private static SingletonSampleClass instance;
-
-    private SingletonSampleClass(Context context) {
-        this.context = context;
-    }
-
-    public synchronized static SingletonSampleClass getInstance(Context context) {
-        if (instance == null) instance = new SingletonSampleClass(context);
-        return instance;
-    }
-
-    public void onDestroy() {
-        if(context != null) {
-            context = null;
+class SingletonSampleClass private constructor(context: Context) {
+    private var context: Context?
+    fun onDestroy() {
+        if (context != null) {
+            context = null
         }
+    }
+
+    companion object {
+        private var instance: SingletonSampleClass? = null
+        @Synchronized
+        fun getInstance(context: Context): SingletonSampleClass? {
+            if (instance == null) instance = SingletonSampleClass(context)
+            return instance
+        }
+    }
+
+    init {
+        this.context = context
     }
 }

@@ -1,39 +1,24 @@
-package com.example.memoryissues.HandlersReferenceLeak;
+package com.example.memoryissues.HandlersReferenceLeak
 
-import android.os.Bundle;
-import android.os.Handler;
-import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
+import android.os.Bundle
+import android.os.Handler
+import com.example.memoryissues.R
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.memoryissues.R;
-
-
-
-public class HandlersReferenceLeakActivity extends AppCompatActivity {
-
-    private TextView textView;
+class HandlersReferenceLeakActivity : AppCompatActivity() {
+    private val textView: TextView? = null
 
     /*
      * Mistake Number 1
      * */
-    private Handler leakyHandler = new Handler();
-
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first);
+    private val leakyHandler = Handler()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_first)
 
         /*
          * Mistake Number 2
-         * */
-        leakyHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(getString(R.string.text_handler_1));
-            }
-        }, 5000);
+         * */leakyHandler.postDelayed({ textView!!.text = getString(R.string.text_handler_1) }, 5000)
     }
 }
